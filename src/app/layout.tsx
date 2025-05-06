@@ -24,23 +24,8 @@ interface RootLayoutProps {
   children: React.ReactNode;
 }
 
-// Metadata should be defined in a server component or page.tsx if this remains a client component.
-// For a root client layout, this metadata object here might not be applied as expected.
-// It's generally recommended to define metadata in server components.
-// export const metadata: Metadata = {
-//   title: "ClimAssist",
-//   description: "Ajudando populações em risco climático no Brasil. Promovendo resiliência, ação comunitária e resposta emergencial.",
-// };
-
-
 export default function RootLayout({ children }: RootLayoutProps) {
   const pathname = usePathname();
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
   const isAuthPage = pathname.startsWith('/auth');
 
   // If it's an authentication page, render a minimal layout
@@ -97,7 +82,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
           </SidebarProvider>
         </ClientOnlyWrapper>
         
-        <Toaster />
+        <ClientOnlyWrapper>
+          <Toaster />
+        </ClientOnlyWrapper>
         <ClientOnlyWrapper>
             <EmergencyButton />
         </ClientOnlyWrapper>
