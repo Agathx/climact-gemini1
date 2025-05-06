@@ -1,7 +1,7 @@
 import { SidebarNav } from '@/components/sidebar-nav';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { UserCircle, Settings, LogOut } from 'lucide-react';
+import { UserCircle, Settings, LogOut, Home, Map, ListChecks, Megaphone, GraduationCap, LifeBuoy, Newspaper } from 'lucide-react';
 import { AppLogo } from './../components/app-logo';
 import {
   DropdownMenu,
@@ -16,8 +16,6 @@ import './globals.css';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { Toaster } from "@/components/ui/toaster"
 import React from 'react';
-import { GeistSans } from 'geist/font/sans'
-import { GeistMono } from 'geist/font/mono'
 import { EmergencyButton } from '@/components/emergency-button';
 import Image from 'next/image';
 
@@ -57,7 +55,7 @@ export default function RootLayout({
 
   return (
     <html lang="pt-BR">
-      <body className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}>
+      <body>
         <SidebarProvider defaultOpen={true} open={true} > {/* Control open state as needed */}
           <Sidebar collapsible="icon" side="left" variant="sidebar" className="border-r">
             <div className="p-4 border-b border-sidebar-border">
@@ -114,4 +112,3 @@ export default function RootLayout({
     </html>
   );
 }
-    
