@@ -1,104 +1,117 @@
-import type { Metadata } from 'next/font';
-import { Geist, Geist_Mono } from 'next/font/google';
-import './globals.css';
-import { Toaster } from '@/components/ui/toaster';
-import {
-  SidebarProvider,
-  Sidebar,
-  SidebarHeader,
-  SidebarContent,
-  SidebarFooter,
-  SidebarInset,
-} from '@/components/ui/sidebar';
-import { AppLogo } from '@/components/app-logo';
 import { SidebarNav } from '@/components/sidebar-nav';
-import { navItems } from '@/config/nav-items';
-import { Header as PageHeader } from '@/components/header'; // Renamed to avoid conflict
-import { EmergencyButton } from '@/components/emergency-button';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { LogOut } from 'lucide-react';
+import { UserCircle, Settings, LogOut } from 'lucide-react';
+import { AppLogo } from './../components/app-logo';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import Link from 'next/link';
-import { NavItem } from '@/config/nav-items';
+import './globals.css';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import { Toaster } from "@/components/ui/toaster"
+import React from 'react';
+import { GeistSans } from 'geist/font/sans'
+import { GeistMono } from 'geist/font/mono'
+import { EmergencyButton } from '@/components/emergency-button';
+import Image from 'next/image';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
-
-export const metadata: Metadata = {
-  title: {
-    default: 'ClimAssist',
-    template: '%s | ClimAssist',
-  },
-  description: 'Ajudando populações em risco climático no Brasil. Promovendo resiliência, ação comunitária e resposta emergencial.',
-  // PWA manifest and icons would be added here or in a manifest.json file
-  // For simplicity, not adding full PWA manifest details here.
-  // manifest: '/manifest.json', 
-  // icons: { apple: '/icon.png' }, 
+// Define the nav items type
+export type NavItem = {
+  label: string;
+  href: string;
+  icon?: React.ElementType;
+  isExternal?: boolean;
+  children?: NavItem[];
 };
+
+interface RootLayoutProps {
+  children: React.ReactNode;
+}
+
+// Mock function to determine user's login status
+const useUser = () => {
+  // Replace this with your actual authentication logic
+  return {
+    isLoggedIn: false, // Example: User is not logged in
+  };
+};
+
+const userLoginNavItems: NavItem[] = [
+  {
+    label: 'Login',
+    href: '/auth/login',
+    icon: UserCircle,
+  },
+];
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  // Placeholder for authentication state
-  const isLoggedIn = false; // Replace with actual auth check
-  const userLoginNavItems = navItems.filter(item => item.href === '/auth/login'); // Get Login NavItem
+}: RootLayoutProps) {
+  const { isLoggedIn } = useUser();
 
   return (
-    <>
-      <html lang="pt-BR">
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <SidebarProvider defaultOpen={true} open={true} > {/* Control open state as needed */}
-            <Sidebar collapsible="icon" side="left" variant="sidebar" className="border-r">
-              <SidebarHeader className="p-4 border-b border-sidebar-border">
-                <AppLogo />
-              </SidebarHeader>
-              <SidebarContent className="flex-1 p-2">
-                <SidebarNav items={navItems} />
-              </SidebarContent>
-              <SidebarFooter className="p-2 border-t border-sidebar-border">
-                {/* User specific nav items or logout */}
-                {isLoggedIn ? (
-                  <>
-                    <SidebarNav items={navItems} />
-                     <Button variant="ghost" className="w-full justify-start mt-2">
-                       <LogOut className="mr-2 h-4 w-4" />
-                       Sair
-                     </Button>
-                  </>
-                ) : (
-                  <>
-                   <Button asChild variant="outline" className="w-full justify-start">
-                      <Link href="/auth/login">
-                       <>
-                        {userLoginNavItems[0].icon && <userLoginNavItems[0].icon className="mr-2 h-4 w-4" />}
-                        {userLoginNavItems[0].label}
-                       </>
-                      </Link>
-                   </Button>
-                  </>
-                )}
-              </SidebarFooter>
-            </Sidebar>
-            <SidebarInset>
-              <PageHeader /> {/* Use the custom Header for the main content area */}
-              <main className="flex-1 p-4 sm:p-6 overflow-auto">
-                {children}
-              </main>
-            </SidebarInset>
-          </SidebarProvider>
-          <Toaster />
-          <EmergencyButton />
-        </body>
-      </html>
-    </>
+    <html lang="pt-BR">
+      <body className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}>
+        <SidebarProvider defaultOpen={true} open={true} > {/* Control open state as needed */}
+          <Sidebar collapsible="icon" side="left" variant="sidebar" className="border-r">
+            <div className="p-4 border-b border-sidebar-border">
+              <AppLogo />
+            </div>
+            <SidebarNav items={[
+              {
+                label: 'Início',
+                href: '/',
+                icon: Home,
+              },
+              {
+                label: 'Mapa de Alertas',
+                href: '/mapa-alertas',
+                icon: Map,
+              },
+              {
+                label: 'Ver Relatos',
+                href: '/relatos',
+                icon: ListChecks,
+              },
+              {
+                label: 'Relatar Desastre',
+                href: '/relatar',
+                icon: Megaphone,
+              },
+              {
+                label: 'Trilhas Educacionais',
+                href: '/educacional',
+                icon: GraduationCap,
+              },
+              {
+                label: 'Central de Ajuda',
+                href: '/ajuda',
+                icon: LifeBuoy,
+              },
+              {
+                label: 'Blog/Notícias',
+                href: '/noticias',
+                icon: Newspaper,
+              },
+            ]} />
+            <div className="p-2 border-t border-sidebar-border">
+              {/* Add extra content here */}
+            </div>
+          </Sidebar>
+          <main className="flex-1 p-4 sm:p-6 overflow-auto">
+            {children}
+          </main>
+        </SidebarProvider>
+        <Toaster />
+        <EmergencyButton />
+      </body>
+    </html>
   );
 }
-
+    
