@@ -84,7 +84,7 @@ function NavItemLink({item, pathname, sidebarState}: NavItemLinkProps) {
 
   const linkContent = (
     <>
-      {item.icon && React.createElement(LucideIcons[item.icon as keyof typeof LucideIcons], {aria-hidden: true})}
+      {item.icon && React.createElement(LucideIcons[item.icon as keyof typeof LucideIcons], { 'aria-hidden': true })}
       <span>{item.label}</span>
     </>
   );
@@ -131,7 +131,7 @@ function CollapsibleNavItem({item, pathname, sidebarState}: NavItemLinkProps & {
                 aria-current={pathname.startsWith(child.href) ? 'page' : undefined}
               >
                 <Link href={child.href} target={child.isExternal ? '_blank' : undefined}>
-                  {child.icon && React.createElement(LucideIcons[child.icon as keyof typeof LucideIcons], {aria-hidden: true})}
+                  {child.icon && React.createElement(LucideIcons[child.icon as keyof typeof LucideIcons], { 'aria-hidden': true })}
                   <span>{child.label}</span>
                 </Link>
               </SidebarMenuSubButton>
