@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
+import Image from 'next/image';
 
 interface QuizQuestion {
   id: string;
@@ -39,6 +40,9 @@ interface TrailModule {
   isCompleted?: boolean; // To be fetched from user data
   progress?: number; // 0-100
 }
+
+// Placeholder icons if lucide-react doesn't have them
+const Waves = ({ className }: { className?: string }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-5h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zm-4-4H7v2h4v-2zm4 0h-2v2h2v-2z"/></svg>; // Simple wave icon
 
 const mockModules: TrailModule[] = [
   {
@@ -81,9 +85,6 @@ const mockModules: TrailModule[] = [
   },
   // Add more modules
 ];
-
-// Placeholder icons if lucide-react doesn't have them
-const Waves = ({ className }: { className?: string }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-5h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zm-4-4H7v2h4v-2zm4 0h-2v2h2v-2z"/></svg>; // Simple wave icon
 
 export default function EducationalTrailsPage() {
   const [modules, setModules] = useState<TrailModule[]>(mockModules);
@@ -297,3 +298,4 @@ export default function EducationalTrailsPage() {
     </div>
   );
 }
+import { AlertTriangle, GraduationCap } from 'lucide-react';
