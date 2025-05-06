@@ -1,11 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import type { LucideIcon } from 'lucide-react';
+import {usePathname} from 'next/navigation';
+import type {LucideIcon} from 'lucide-react';
+import * as React from 'react';
 
-import { cn } from '@/lib/utils';
-import type { NavItem } from '@/config/nav-items';
+import {cn} from '@/lib/utils';
+import type {NavItem} from '@/config/nav-items';
 import {
   SidebarMenu,
   SidebarMenuItem,
@@ -14,17 +15,42 @@ import {
   SidebarMenuSubItem,
   SidebarMenuSubButton,
 } from '@/components/ui/sidebar';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { useSidebar } from '@/components/ui/sidebar'; // Ensure this hook exists and provides sidebar state
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/ui/tooltip';
+import {useSidebar} from '@/components/ui/sidebar'; // Ensure this hook exists and provides sidebar state
+import {
+  Home,
+  Map,
+  ListChecks,
+  Megaphone,
+  GraduationCap,
+  LifeBuoy,
+  Newspaper,
+  UserCircle,
+  Settings,
+  LogOut,
+} from 'lucide-react';
+
+const LucideIcons: Record<string, LucideIcon> = {
+  Home,
+  Map,
+  ListChecks,
+  Megaphone,
+  GraduationCap,
+  LifeBuoy,
+  Newspaper,
+  UserCircle,
+  Settings,
+  LogOut,
+};
 
 interface SidebarNavProps {
   items: NavItem[];
   className?: string;
 }
 
-export function SidebarNav({ items, className }: SidebarNavProps) {
+export function SidebarNav({items, className}: SidebarNavProps) {
   const pathname = usePathname();
-  const { state: sidebarState } = useSidebar(); // Use 'state' for collapsed/expanded
+  const {state: sidebarState} = useSidebar(); // Use 'state' for collapsed/expanded
 
   if (!items?.length) {
     return null;
@@ -53,12 +79,12 @@ interface NavItemLinkProps {
   sidebarState: 'expanded' | 'collapsed';
 }
 
-function NavItemLink({ item, pathname, sidebarState }: NavItemLinkProps) {
+function NavItemLink({item, pathname, sidebarState}: NavItemLinkProps) {
   const isActive = item.href === '/' ? pathname === item.href : pathname.startsWith(item.href);
 
   const linkContent = (
     <>
-      <item.icon aria-hidden="true" />
+      {item.icon && React.createElement(LucideIcons[item.icon as keyof typeof LucideIcons], {aria-hidden: true})}
       <span>{item.label}</span>
     </>
   );
@@ -87,7 +113,7 @@ function NavItemLink({ item, pathname, sidebarState }: NavItemLinkProps) {
 }
 
 
-function CollapsibleNavItem({ item, pathname, sidebarState }: NavItemLinkProps & { item: NavItem & { children: NavItem[] }}) {
+function CollapsibleNavItem({item, pathname, sidebarState}: NavItemLinkProps & { item: NavItem & { children: NavItem[] }}) {
   // This is a simplified version. A full collapsible item would need state management (e.g. Radix Collapsible)
   // For now, it will just render the parent and then its children if the path matches.
   const isParentActive = pathname.startsWith(item.href);
@@ -105,7 +131,7 @@ function CollapsibleNavItem({ item, pathname, sidebarState }: NavItemLinkProps &
                 aria-current={pathname.startsWith(child.href) ? 'page' : undefined}
               >
                 <Link href={child.href} target={child.isExternal ? '_blank' : undefined}>
-                  <child.icon aria-hidden="true" />
+                  {child.icon && React.createElement(LucideIcons[child.icon as keyof typeof LucideIcons], {aria-hidden: true})}
                   <span>{child.label}</span>
                 </Link>
               </SidebarMenuSubButton>

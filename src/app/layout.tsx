@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from 'next/link';
 import './globals.css';
-import { SidebarProvider } from '@/components/ui/sidebar';
+import { SidebarProvider, Sidebar } from '@/components/ui/sidebar';
 import { Toaster } from "@/components/ui/toaster"
 import React from 'react';
 import { EmergencyButton } from '@/components/emergency-button';
@@ -23,7 +23,7 @@ import Image from 'next/image';
 export type NavItem = {
   label: string;
   href: string;
-  icon?: React.ElementType;
+  icon?: string;
   isExternal?: boolean;
   children?: NavItem[];
 };
@@ -44,7 +44,7 @@ const userLoginNavItems: NavItem[] = [
   {
     label: 'Login',
     href: '/auth/login',
-    icon: UserCircle,
+    icon: 'UserCircle',
   },
 ];
 
@@ -65,37 +65,37 @@ export default function RootLayout({
               {
                 label: 'Início',
                 href: '/',
-                icon: Home,
+                icon: 'Home',
               },
               {
                 label: 'Mapa de Alertas',
                 href: '/mapa-alertas',
-                icon: Map,
+                icon: 'Map',
               },
               {
                 label: 'Ver Relatos',
                 href: '/relatos',
-                icon: ListChecks,
+                icon: 'ListChecks',
               },
               {
                 label: 'Relatar Desastre',
                 href: '/relatar',
-                icon: Megaphone,
+                icon: 'Megaphone',
               },
               {
                 label: 'Trilhas Educacionais',
                 href: '/educacional',
-                icon: GraduationCap,
+                icon: 'GraduationCap',
               },
               {
                 label: 'Central de Ajuda',
                 href: '/ajuda',
-                icon: LifeBuoy,
+                icon: 'LifeBuoy',
               },
               {
                 label: 'Blog/Notícias',
                 href: '/noticias',
-                icon: Newspaper,
+                icon: 'Newspaper',
               },
             ]} />
             <div className="p-2 border-t border-sidebar-border">
@@ -112,3 +112,4 @@ export default function RootLayout({
     </html>
   );
 }
+
