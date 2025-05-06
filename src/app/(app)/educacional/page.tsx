@@ -1,10 +1,11 @@
+
 'use client';
 
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircle, BookOpen, Brain, Award, ChevronRight, X, Lightbulb } from 'lucide-react';
+import { CheckCircle, BookOpen, Brain, Award, ChevronRight, X, Lightbulb, AlertTriangle, GraduationCap } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,7 +35,7 @@ interface TrailModule {
   description: string;
   icon: React.ElementType;
   estimatedTime: string;
-  contentPages: { title: string; content: string | React.ReactNode; type: 'text' | 'image' | 'video_embed' }[];
+  contentPages: { title: string; content: string | React.ReactNode; type: 'text' | 'image' | 'video_embed', dataAiHint?: string }[];
   quiz: QuizQuestion[];
   reward: string; // e.g., 'Medalha de Preparo para Enchentes'
   isCompleted?: boolean; // To be fetched from user data
@@ -42,14 +43,19 @@ interface TrailModule {
 }
 
 // Placeholder icons if lucide-react doesn't have them
-const Waves = ({ className }: { className?: string }) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-5h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zm-4-4H7v2h4v-2zm4 0h-2v2h2v-2z"/></svg>; // Simple wave icon
+const Waves = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={cn("h-6 w-6", className)}>
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM7.5 12c0-2.48 2.02-4.5 4.5-4.5s4.5 2.02 4.5 4.5c0 2.48-2.02 4.5-4.5 4.5S7.5 14.48 7.5 12zm2.5-0.5c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm-4 4c1.38 0 2.5-1.12 2.5-2.5S8.38 11 7 11s-2.5 1.12-2.5 2.5S5.62 16 7 16zm10 0c1.38 0 2.5-1.12 2.5-2.5S18.38 11 17 11s-2.5 1.12-2.5 2.5.92 2.5 2.5 2.5zM12 6.5c-1.38 0-2.5 1.12-2.5 2.5S10.62 11.5 12 11.5s2.5-1.12 2.5-2.5S13.38 6.5 12 6.5z"/>
+  </svg>
+); // Simple wave icon
+import { cn } from "@/lib/utils" // Ensure cn is imported for Waves icon
 
 const mockModules: TrailModule[] = [
   {
     id: 'flood-prep',
     title: 'Prevenção e Ação em Enchentes',
     description: 'Aprenda como se preparar, agir durante e se recuperar de enchentes e alagamentos.',
-    icon: Waves, // Placeholder, replace with appropriate icon from lucide-react if available
+    icon: Waves, 
     estimatedTime: '45 min',
     contentPages: [
       { title: 'O que Causa Enchentes?', content: 'Enchentes são causadas por chuvas intensas, transbordamento de rios, rompimento de barragens ou sistemas de drenagem ineficientes...', type: 'text' },
@@ -225,7 +231,7 @@ export default function EducationalTrailsPage() {
                      </div>
                   )}
                    {(quizScore / selectedModule.quiz.length < 0.7) && (
-                     <p className="mt-3 text-amber-700 font-semibold">Você precisa acertar mais questões para ganhar a recompensa. Tente novamente!</p>
+                     <p className="mt-3 text-accent font-semibold">Você precisa acertar mais questões para ganhar a recompensa. Tente novamente!</p>
                   )}
                 </div>
               ) : (
@@ -298,5 +304,3 @@ export default function EducationalTrailsPage() {
     </div>
   );
 }
-import { AlertTriangle, GraduationCap } from 'lucide-react';
-

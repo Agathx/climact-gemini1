@@ -1,7 +1,8 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { UserCircle, ListChecks, Award, Settings, Edit3, BarChart3, Bell } from 'lucide-react';
@@ -28,12 +29,12 @@ interface CompletedTrail {
   title: string;
   dateCompleted: string;
   certificateUrl?: string; // URL to download certificate
-  badgeIcon: React.ElementType; // Icon for the badge
+  badgeIcon: string; // Icon name for the badge
 }
 
 const mockCompletedTrails: CompletedTrail[] = [
-  { id: 't1', title: 'Prevenção e Ação em Enchentes', dateCompleted: '2024-07-01', certificateUrl: '#', badgeIcon: Award },
-  { id: 't2', title: 'Primeiros Socorros Básicos', dateCompleted: '2024-06-20', badgeIcon: Award },
+  { id: 't1', title: 'Prevenção e Ação em Enchentes', dateCompleted: '2024-07-01', certificateUrl: '#', badgeIcon: 'Award' },
+  { id: 't2', title: 'Primeiros Socorros Básicos', dateCompleted: '2024-06-20', badgeIcon: 'Award' },
 ];
 
 interface UserProfile {
@@ -79,6 +80,9 @@ export default function UserDashboardPage() {
       default: return 'text-muted-foreground';
     }
   };
+  
+  const LucideIcons: Record<string, React.ElementType> = { Award };
+
 
   if (isLoading) {
     return (
@@ -204,9 +208,11 @@ export default function UserDashboardPage() {
             <CardContent>
               {completedTrails.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {completedTrails.map(trail => (
+                  {completedTrails.map(trail => {
+                    const IconComponent = LucideIcons[trail.badgeIcon] || LucideIcons.Award; // Fallback to Award
+                    return (
                     <Card key={trail.id} className="p-4 text-center bg-secondary/20 hover:shadow-md transition-shadow">
-                      <trail.badgeIcon className="h-16 w-16 text-primary mx-auto mb-3" />
+                      <IconComponent className="h-16 w-16 text-primary mx-auto mb-3" />
                       <h3 className="font-semibold text-md mb-1">{trail.title}</h3>
                       <p className="text-xs text-muted-foreground">Concluído em: {new Date(trail.dateCompleted).toLocaleDateString('pt-BR')}</p>
                       {trail.certificateUrl && (
@@ -215,7 +221,8 @@ export default function UserDashboardPage() {
                         </Button>
                       )}
                     </Card>
-                  ))}
+                  );
+                })}
                 </div>
               ) : (
                 <p className="text-muted-foreground text-center py-8">Você ainda não completou nenhuma trilha.</p>
