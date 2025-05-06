@@ -1,107 +1,93 @@
-import { SidebarNav } from '@/components/sidebar-nav';
+
+'use client'; // Marking RootLayout as a client component as it orchestrates client components and their state.
+
+import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarFooter, SidebarInset } from '@/components/ui/sidebar';
 import { AppLogo } from '@/components/app-logo';
 import Link from 'next/link';
 import './globals.css';
-import { SidebarProvider, Sidebar, SidebarHeader, SidebarFooter, SidebarContent } from '@/components/ui/sidebar';
 import { Toaster } from "@/components/ui/toaster"
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { EmergencyButton } from '@/components/emergency-button';
-import type { Metadata } from "next";
-import { Home, Map, ListChecks, Megaphone, GraduationCap, LifeBuoy, Newspaper } from 'lucide-react';
+import { Home, Map, ListChecks, Megaphone, GraduationCap, LifeBuoy, Newspaper, UserCircle } from 'lucide-react';
 import { LoginButtonFooter, LoginButtonHeader } from '@/components/auth-buttons';
+import { ClientOnlyWrapper } from '@/components/client-only-wrapper';
+import { usePathname } from 'next/navigation';
+import { SidebarNav } from '@/components/sidebar-nav';
+import { mainNavItemsList as mainNavItems, userLoginNavItemsConfig as userLoginNavItems } from '@/config/nav-items';
+import type { NavItem } from '@/config/nav-items';
 
-
-// Define the nav items type
-export type NavItem = {
-  label: string;
-  href: string;
-  icon?: string; // Changed to string to be used as key
-  isExternal?: boolean;
-  children?: NavItem[];
-};
 
 interface RootLayoutProps {
   children: React.ReactNode;
 }
 
-const mainNavItems: NavItem[] = [
-  {
-    label: 'Início',
-    href: '/',
-    icon: 'Home',
-  },
-  {
-    label: 'Mapa de Alertas',
-    href: '/mapa-alertas',
-    icon: 'Map',
-  },
-  {
-    label: 'Ver Relatos',
-    href: '/relatos',
-    icon: 'ListChecks',
-  },
-  {
-    label: 'Relatar Desastre',
-    href: '/relatar',
-    icon: 'Megaphone',
-  },
-  {
-    label: 'Trilhas Educacionais',
-    href: '/educacional',
-    icon: 'GraduationCap',
-  },
-  {
-    label: 'Central de Ajuda',
-    href: '/ajuda',
-    icon: 'LifeBuoy',
-  },
-  {
-    label: 'Blog/Notícias',
-    href: '/noticias',
-    icon: 'Newspaper',
-  },
-];
-
-export const metadata: Metadata = {
-  title: "ClimAssist",
-  description: "Ajudando populações em risco climático no Brasil. Promovendo resiliência, ação comunitária e resposta emergencial.",
-  icons: {
-    icon: "/favicon.ico",
-  },
-};
 
 export default function RootLayout({
   children,
 }: RootLayoutProps) {
+  const pathname = usePathname();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Determine if the current path is an auth path
+  const isAuthPage = pathname.startsWith('/auth');
+
+  if (isAuthPage) {
+    // For auth pages, render children directly without the main layout shell
+    // This also means Toaster might need to be re-added here if needed on auth pages specifically
+    // or use a nested layout for auth pages that includes it.
+    return (
+      <html lang="pt-BR">
+        <ClientOnlyWrapper>
+          <body>
+            {children}
+            <Toaster />
+          </body>
+        </ClientOnlyWrapper>
+      </html>
+    );
+  }
+  
   return (
     <html lang="pt-BR">
-      <body>
-        <SidebarProvider defaultOpen={true} open={true} > {/* Control open state as needed */}
-          <Sidebar collapsible="icon" side="left" variant="sidebar" className="border-r">
-            <SidebarHeader className="p-4 border-b border-sidebar-border">
-              <AppLogo />
-            </SidebarHeader>
-            <SidebarContent className="flex-1 p-2">
-             <SidebarNav items={mainNavItems} />
-            </SidebarContent>
-            <SidebarFooter className="p-2 border-t border-sidebar-border">
-              <LoginButtonFooter />
-            </SidebarFooter>
-          </Sidebar>
-          <main className="flex-1 p-4 sm:p-6 overflow-auto">
-            {children}
-          </main>
-           {/* Header for mobile and actions like login */}
-          <header className="absolute top-6 right-6 md:hidden"> {/* Only show on mobile */}
-            <LoginButtonHeader />
-          </header>
-          <div className="hidden md:block absolute top-6 right-6"> {/* Show on desktop */}
-             <LoginButtonHeader />
-          </div>
-        </SidebarProvider>
-        <Toaster />
-        <EmergencyButton />
-      </body>
+      <ClientOnlyWrapper>
+        <body>
+          <SidebarProvider defaultOpen={true} open={true} > {/* Control open state as needed */}
+            <Sidebar collapsible="icon" side="left" variant="sidebar" className="border-r">
+              <SidebarHeader className="p-4 border-b border-sidebar-border">
+                <AppLogo />
+              </SidebarHeader>
+              <SidebarContent className="flex-1 p-2">
+                <SidebarNav items={mainNavItems} />
+              </SidebarContent>
+              <SidebarFooter className="p-2 border-t border-sidebar-border">
+                <LoginButtonFooter />
+              </SidebarFooter>
+            </Sidebar>
+
+            <SidebarInset>
+              {/* Header for mobile and actions like login */}
+              <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:h-16 sm:px-6 md:justify-end">
+                  <div className="md:hidden"> {/* Mobile: Show Logo (via AppLogo or specific component) & menu toggle */}
+                    {/* <SidebarTrigger />  // Assuming SidebarTrigger is for toggling the sidebar */}
+                    <AppLogo iconSize={28} hideText={true}/>
+                  </div>
+                  <LoginButtonHeader />
+              </header>
+              <main className="flex-1 p-4 sm:p-6 overflow-auto">
+                {children}
+              </main>
+            </SidebarInset>
+
+            <Toaster />
+            <EmergencyButton />
+          </SidebarProvider>
+        </body>
+      </ClientOnlyWrapper>
     </html>
   );
 }
+
