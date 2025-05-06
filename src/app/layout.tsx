@@ -18,6 +18,7 @@ import { EmergencyButton } from '@/components/emergency-button';
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
 import Link from 'next/link';
+import { NavItem } from '@/config/nav-items';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -48,7 +49,7 @@ export default function RootLayout({
 }>) {
   // Placeholder for authentication state
   const isLoggedIn = false; // Replace with actual auth check
-  const userLoginNavItems = userNavItems(false);
+  const userLoginNavItems = navItems.filter(item => item.href === '/auth/login'); // Get Login NavItem
 
   return (
     <>
@@ -66,7 +67,7 @@ export default function RootLayout({
                 {/* User specific nav items or logout */}
                 {isLoggedIn ? (
                   <>
-                    <SidebarNav items={userNavItems(true)} />
+                    <SidebarNav items={navItems} />
                      <Button variant="ghost" className="w-full justify-start mt-2">
                        <LogOut className="mr-2 h-4 w-4" />
                        Sair
@@ -76,8 +77,10 @@ export default function RootLayout({
                   <>
                    <Button asChild variant="outline" className="w-full justify-start">
                       <Link href="/auth/login">
-                        <userLoginNavItems[0].icon className="mr-2 h-4 w-4" />
+                       <>
+                        {userLoginNavItems[0].icon && <userLoginNavItems[0].icon className="mr-2 h-4 w-4" />}
                         {userLoginNavItems[0].label}
+                       </>
                       </Link>
                    </Button>
                   </>
@@ -98,3 +101,4 @@ export default function RootLayout({
     </>
   );
 }
+
