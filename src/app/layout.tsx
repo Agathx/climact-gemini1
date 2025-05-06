@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/sidebar';
 import { AppLogo } from '@/components/app-logo';
 import { SidebarNav } from '@/components/sidebar-nav';
-import { navItems, userNavItems } from '@/config/nav-items';
+import { navItems } from '@/config/nav-items';
 import { Header as PageHeader } from '@/components/header'; // Renamed to avoid conflict
 import { EmergencyButton } from '@/components/emergency-button';
 import { Button } from '@/components/ui/button';
@@ -48,6 +48,7 @@ export default function RootLayout({
 }>) {
   // Placeholder for authentication state
   const isLoggedIn = false; // Replace with actual auth check
+  const userLoginNavItems = userNavItems(false);
 
   return (
     <>
@@ -72,12 +73,14 @@ export default function RootLayout({
                      </Button>
                   </>
                 ) : (
+                  <>
                    <Button asChild variant="outline" className="w-full justify-start">
                       <Link href="/auth/login">
-                        <userNavItems(false)[0].icon className="mr-2 h-4 w-4" />
-                        {userNavItems(false)[0].label}
+                        <userLoginNavItems[0].icon className="mr-2 h-4 w-4" />
+                        {userLoginNavItems[0].label}
                       </Link>
                    </Button>
+                  </>
                 )}
               </SidebarFooter>
             </Sidebar>
@@ -95,4 +98,3 @@ export default function RootLayout({
     </>
   );
 }
-
