@@ -84,7 +84,7 @@ function NavItemLink({item, pathname, sidebarState}: NavItemLinkProps) {
 
   const linkContent = (
     <>
-      {item.icon && React.createElement(LucideIcons[item.icon as keyof typeof LucideIcons], { 'aria-hidden': true })}
+      {item.icon && React.createElement(LucideIcons[item.icon as keyof typeof LucideIcons], {'aria-hidden': true})}
       <span>{item.label}</span>
     </>
   );
@@ -142,3 +142,4 @@ function CollapsibleNavItem({item, pathname, sidebarState}: NavItemLinkProps & {
     </>
   );
 }
+

@@ -299,3 +299,4 @@ export default function EducationalTrailsPage() {
   );
 }
 import { AlertTriangle, GraduationCap } from 'lucide-react';
+
